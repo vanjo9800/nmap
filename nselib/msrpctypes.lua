@@ -848,7 +848,6 @@ end
 --@return (pos, int32) The new position, and the value.
 function unmarshall_int32(data, pos)
   local value
-
   pos = pos or 1
   if #data - pos + 1 < 4 then
     stdnse.debug1("MSRPC: ERROR: Ran off the end of a packet in unmarshall_int32(). Please report!")
@@ -1652,6 +1651,8 @@ function marshall_dom_sid2(sid)
   until pos_next == nil
   sid_array['num_auths'] = i - 1
 
+  -- Make sure sid_array.authority is defined before passing it to string.pack
+  if (sid_array.authority == nil) then sid_array.authority = 1 end
   result = {
     -- TODO: Is the first 32-bit integer here supposed to be num_auths, or some
     -- other count value?
